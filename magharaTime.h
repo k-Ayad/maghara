@@ -1,3 +1,6 @@
+
+#include "maghara_headers.h";
+
 //---------Time defines for the maghara-------------//
 // times unit : s
 // t1:raye7
@@ -10,23 +13,26 @@
 //------------Ekttab Timing-------------------------// tick 
 #define write_t1        19
 #define write_t2        19
+#define hotel_t1        5
+#define hotel_t2        5
 //------------bab mzwad kharigy timing -----------------//  
 #define nativity_t1     9
 #define nativity_t2     9
 
-/*
+
 //----------- 7araket al malak ------- Not USED HARD CODED ISA---------------//
 #define angels_t1        7    
 #define angels_t2        7
-*/
+
 //------------7araket al ngm ------------------------// 
 #define star_going_t1    13
-#define star_going_t2    52
 #define star_back_t1     34
 #define star_back_t2     17   // NOT ACCURATE *******
 //-------------7araket al magos ---------------------// tick
 #define kings_forward_t1  23
 #define kings_forward_t2  24
+#define kings_reverse_t1  23
+#define kings_reverse_t2  24
 
 //-------------herodes al malek ---------------
 #define herodes_t1    9
@@ -35,7 +41,6 @@
 #define baby_jesus_t1 12
 #define baby_jesus_t2 12
 
-// min to sec fun
 
 
 int timer(){
@@ -43,7 +48,14 @@ int timer(){
     return t/1000000  ; 
 }
 
+//--- Function for flashing
+int now_flasher(){
+    unsigned long t=micros();
+    return t/100000 ; 
+}
 
+
+// min to sec fun
 long tsconvert(const char *timestam) {
   unsigned m, s;
   int n = 0;
@@ -65,6 +77,21 @@ void action (int pin , const char *time , int state , int duration =0){
   if(timer() == sec_close && duration != 0 ){
   digitalWrite(pin , !state);
   }
+}
+
+void flash (const char *t1 , const char *t2){
+    int flash_start = tsconvert(t1);
+    int flash_end = tsconvert(t2);
+    if( timer() > flash_start && timer() < flash_end)
+    {
+      if (now_flasher() % 2 ==0)
+      {
+        digitalWrite(flashing_led,HIGH);
+      } else
+      {
+        digitalWrite(flashing_led,LOW);
+      }
+    }
 }
 
 
